@@ -2,11 +2,11 @@
 Code for the MGKS paper - including key Broadway libraries
 
 Note, most of the code, geometries and custom basis sets are provided for
-reproducibility purposes.
+reproducibility purposes and are poorly document.
 
 A notable exception is the VASP2Hirata.py code that computes thermally
 adapted fundamental gap predictions from standard finite-temperature
-(smeared) VASP calculations, via the EIGENVAL code. Run it to find out
+(smeared) VASP calculations, via the EIGENVAL file. Run it to find out
 its options.
 
 
