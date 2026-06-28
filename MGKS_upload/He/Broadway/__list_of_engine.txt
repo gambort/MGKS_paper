@@ -1,0 +1,77 @@
+EDFT.py:    def __init__(self, Engine,
+EDFT.py:            Engine (Engine class): A valid Engine class with a minimal list of routines (see PDF for details)
+EDFT.py:        self.SetEngine(Engine)
+EDFT.py:        if self.Engine.Has_RS:
+EDFT.py:    def SetEngine(self, Engine):
+EDFT.py:        """Read key information from Engine and set up access to key routines
+EDFT.py:            Engine (Engine class): A valid Engine class with a minimal list of routines (see PDF for details)
+EDFT.py:        self.Engine = Engine
+EDFT.py:        self.NAtom = Engine.NAtom
+EDFT.py:        self.f = Engine.f*1.
+EDFT.py:        self.f_Occ = Engine.f_Occ*1.
+EDFT.py:        self.Na = Engine.Na
+EDFT.py:        self.Nb = Engine.Nb
+EDFT.py:        self.kh = Engine.kh
+EDFT.py:        self.kl = Engine.kl
+EDFT.py:        self.C0 = Engine.C*1.
+EDFT.py:        self.epsilon0 = Engine.epsilon*1.
+EDFT.py:        self.Sym_k = Engine.Sym_k
+EDFT.py:        self.epsilonE = Engine.epsilon*1.
+EDFT.py:        self.CE = Engine.C*1.
+EDFT.py:            self.kFrom = self.Engine.kh
+EDFT.py:            for q in range(self.Engine.kh):
+EDFT.py:                k = self.Engine.kh - q
+EDFT.py:        elif (k is None) or (k>self.Engine.kh):
+EDFT.py:            self.kFrom = self.Engine.kh
+EDFT.py:            self.kTo = self.Engine.kl
+EDFT.py:            for k in range(self.Engine.kl, self.Engine.nbf):
+EDFT.py:        elif (k is None) or (k<self.Engine.kl):
+EDFT.py:            self.kTo = self.Engine.kl
+EDFT.py:        """Reset the orbitals to their original value (by default inherited from Engine)
+EDFT.py:        """Reset the orbitals to their original value (by default inherited from Engine)
+EDFT.py:        FCTV = self.Engine.Get_TC(C) + self.Engine.Get_VC(C)
+EDFT.py:                EHx, FCHxa = self.Engine.GetHx_FC(C, Ca=Ca)
+EDFT.py:                EHx, FCHxa, FCHxb = self.Engine.GetHx_FC(C, Ca=Ca, Cb=Cb, BothSpin=True)
+EDFT.py:                Exc, FCxca = self.Engine.GetDFA_FC(C, Ca=Ca)
+EDFT.py:                Exc, FCxca, FCxcb = self.Engine.GetDFA_FC(C, Ca=Ca, Cb=Cb, BothSpin=True)
+EDFT.py:                    EEx_, FCEx_ = self.Engine.GetExtra_FC(C, Extra=[(1.,1., j, k, Kind)])
+EDFT.py:        E += self.Engine.Enn
+EDFT.py:                    _, FCEx = self.Engine.GetExtra_FC(C, Extra=[(1.,1., j, k, Kind)])
+EDFT.py:        ExcList = self.Engine.GetEDFA_ID('cPBE', DList)
+EDFT.py:            DCP = self.Engine.Get_1BC(CP, 'Dipole')
+EDFT.py:        DCa = self.Engine.Get_1BC(C[:,a], 'Dipole')
+Helpers.py:        Over = (XHelp.CE.T).dot(XHelp.Engine.Get_SC(XHelp.C0))**2*100.
+LBFGSEDFT.py:        SC = self.Engine.Get_SC(self.CE)
+OOEDFT.py:        SC = self.Engine.Get_SC(self.CE)
+OOEDFTLowMem.py:    def __init__(self, Engine, 
+OOEDFTLowMem.py:        self.SetEngine(Engine, NExcite)
+OOEDFTLowMem.py:        if self.Engine.Has_RS:
+OOEDFTLowMem.py:    def SetEngine(self, Engine, NExcite = 8):
+OOEDFTLowMem.py:        self.Engine = Engine
+OOEDFTLowMem.py:        self.NAtom = Engine.NAtom
+OOEDFTLowMem.py:        self.f = Engine.f
+OOEDFTLowMem.py:        self.f_Occ = Engine.f_Occ
+OOEDFTLowMem.py:        self.Na = Engine.Na
+OOEDFTLowMem.py:        self.Nb = Engine.Nb
+OOEDFTLowMem.py:        self.kh = Engine.kh
+OOEDFTLowMem.py:        self.kl = Engine.kl
+OOEDFTLowMem.py:        self.NOrb = Engine.kh+1+NExcite
+OOEDFTLowMem.py:        self.C0 = Engine.C[:,:self.NOrb]*1.
+OOEDFTLowMem.py:        self.epsilon0 = Engine.epsilon[:self.NOrb]
+OOEDFTLowMem.py:        self.Sym_k = Engine.Sym_k[:self.NOrb]
+OOEDFTLowMem.py:            SC = self.Engine.Get_SC(C)
+OOEDFTLowMem.py:                R[:,kp] = self.Engine.Get_InvSC(FC_k) # This needs refining (NOT TRUE LOWMEM)
+OOEDFTLowMem.py:            O = (R.T).dot(self.Engine.Get_SC(R))
+OOEDFTLowMem.py:                    Ep, _ = self.GetEnergy(Plan, C=ReOrtho(C+DC, self.Engine.Get_SC))
+OOEDFTLowMem.py:                    Em, _ = self.GetEnergy(Plan, C=ReOrtho(C-DC, self.Engine.Get_SC))
+OOEDFTLowMem.py:                self.CE = ReOrtho(C + x*DC, self.Engine.Get_SC)
+OOELDA.py:            self.Grid = self.Engine.GetDFTGrid()
+OOELDA.py:            print("Engine.GetDFTGrid() is not defined")
+OOELDA.py:            print("%3d %3d %6.2f %6.2f"%(NCore, NOcc, np.sum(f), np.vdot(DCore, self.Engine.S_ao)))
+OOELDA.py:        FTV = self.Engine.T_ao + self.Engine.V_ao
+OOELDA.py:                EHx, FHx, FHx_d = self.Engine.GetHx(Ca=Ca, Cb=Cb, BothSpin=True)
+OOELDA.py:                EHx, FHx = self.Engine.GetHx(Ca=Ca)
+OOELDA.py:                    EEx_P, FEx_P = self.Engine.GetExtra(C, [Pm,])
+OOELDA.py:                EEx, FEx = self.Engine.GetExtra(C, Plan['Extra'])
+OOELDA.py:        E += self.Engine.Enn
+OOELDA.py:            FockList[k] = self.Engine.T_ao + self.Engine.V_ao # Start with TV
