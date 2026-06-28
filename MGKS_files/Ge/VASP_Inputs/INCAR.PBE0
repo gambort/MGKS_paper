@@ -1,0 +1,21 @@
+GGA=PE
+LHFCALC = .TRUE.
+AEXX=0.25
+
+ENCUT = 250    # Moderate accuracy
+
+#ALGO  = Normal # alorithm for electron optim	ization
+ALGO    = Damped  # Should be better for hybrids
+TIME    = 0.8
+
+ISMEAR= -1     # Fermi smearing
+SIGMA = __SIGMA__   # width of the smearing in eV
+
+ISTART= 1      # Read WAVECAR if there
+ICHARG=1       # Read DENS if there
+
+IBRION = -1
+EDIFF = 1E-6
+
+NBANDS = 30
+LAECHG = .TRUE.
