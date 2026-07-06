@@ -30,7 +30,7 @@ class EIGENVALHelper:
                 F.readline()
                 F.readline()
                 X = [int(x) for x in F.readline().split()]
-                _, NK, NBands = tuple(X)
+                NEl, NK, NBands = tuple(X)
 
                 Raw = {}
 
@@ -75,7 +75,17 @@ class EIGENVALHelper:
             self.eps_nk[k,:] = self.Data[k]['epsilon_k']
             self.N += np.sum(self.Data[k]['Occ_k']*self.wk[k])
 
-        self.N = 2.*np.round(self.N)
+        if np.abs(self.N-NEl)<1e-4:
+            print("Spin-resolved calculation")
+            self.Pre = 1.0
+            self.N = float(NEl)
+        elif np.abs(2*self.N-NEl)<1e-4:
+            self.Pre = 2.0
+            self.N = float(NEl)
+        else:
+            print("Inconsistent charge in EIGENVAL - please check!")
+            quit()
+            
 
         if Nk is None:
             # Estimate the grid based on the available points
@@ -130,7 +140,7 @@ class EIGENVALHelper:
     
     def Occ_mu(self, tau, mu):
         x = np.minimum( (self.eps_nk - mu)/tau, 80. )
-        return 2./(1. + np.exp( x ))
+        return self.Pre/(1. + np.exp( x ))
 
     def Avg(self, F):
         return np.sum(np.dot(self.wk, F))
