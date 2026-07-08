@@ -13,6 +13,10 @@ import sys
 
 psi4.set_output_file("__He.out")
 
+StopAfterTest = False
+if len(sys.argv)>1:
+    if sys.argv[1].lower()[:4]=='test':
+        StopAfterTest = True
 
 np.set_printoptions(precision=4, suppress=True)
 
@@ -62,8 +66,15 @@ EA = FCIH.Data[2][1]['E_Box'][0]-FCIH.Data[3][2]['E_Box'][0]
 E_ST = FCIH.Data[2][3]['E_Box'][0]-FCIH.Data[2][1]['E_Box'][0]
 E_SS = FCIH.Data[2][1]['E_Box'][1]-FCIH.Data[2][1]['E_Box'][0]
 
+print('='*72)
+print("Error analysis for He - small numbers (<50%) in right three columns indicate reliable results")
+FCIH.EstimateErrors(0, 10)
+print('='*72)
+
 print("IP = %5.2f EA = %5.2f E_ST = %5.2f E_SS = %5.2f"\
       %(IP*eV, EA*eV, E_ST*eV, E_SS*eV))
+
+if StopAfterTest: quit()
 
 Ens = { N:{D: FCIH.Data[N][D]['E_Box'] for D in FCIH.Data[N] } for N in FCIH.Data }
 

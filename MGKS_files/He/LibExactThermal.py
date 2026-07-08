@@ -459,6 +459,7 @@ class FCIHelper:
         mu = res.x
 
         W = QN(mu, WOnly = True)
+        self.mu_Last = mu
 
         # Renormalize
         W *= self.N0/np.dot(W, N_All)
@@ -472,6 +473,56 @@ class FCIHelper:
                 D_T += np.einsum('k,kpq->pq', W_All[N][D], self.Data[N][D]['D_Box'])
 
         return W_All, E_T, D_T
+
+    def EstimateErrors(self, T0=0.01, T1=10):
+        kbT_all = np.linspace(max(T0,0.01), T1, 20)/eV
+
+        def GetNS(X, eps=0.0016):
+            Q = np.abs(X-X[-1])
+            for k in range(1, len(Q)):
+                if Q[k]<eps: break
+            return k+1
+        
+        print("%5s %7s %5s %5s %5s [eV]" % ('kbT', 'F-F0', '0.01', '0.1', '5%'))
+
+        E_0 = None
+        for kbT in kbT_all:
+            W_T, E_T, D_T = self.Solve(kbT)
+            D_All, N_All, E_All = self.Flatten()
+            _, _, W_All = self.Flatten(W_T)
+
+            # Incorporate the chemical potential into the energies
+            E_All = E_All - self.mu_Last*(N_All-2)
+
+            # Sort from highest to lowest weights
+            kk = np.argsort(W_All)[::-1]
+            D_All = D_All[kk]
+            W_All = W_All[kk]
+            E_All = E_All[kk]
+
+            if E_0 is None:
+                NState = len(E_All)
+                E_0 = np.dot(W_All, E_All)
+
+            W_Cum = np.maximum(np.cumsum(W_All), 1e-5)
+
+            E = np.cumsum(W_All*E_All)/W_Cum
+            TS = -kbT*np.cumsum(W_All*safelog(W_All/D_All))/W_Cum
+            F = E - TS
+            dF = F[-1] - E_0
+
+            eps_5 = np.abs(dF*0.05)
+
+            CountStr = ""
+            for eps in (0.01/eV, 0.1/eV, eps_5):
+                pE = GetNS(E, eps)
+                pTS = GetNS(TS, eps)
+                pF = GetNS(F, eps)
+
+                k0 = max(pE, pTS, pF)
+                CountStr += "%4.0f%% "%(100.*k0/NState)
+            print("%5.2f %7.3f %s" % (kbT*eV, dF*eV, CountStr))
+
 
 
 class KSThermalHelper:
