@@ -404,7 +404,7 @@ class FCIHelper:
                         f = np.einsum('pk,pq,qk->k', SC, D[k,:,:], SC)
                     print(f)
 
-    def Flatten(self, E_Dict=None, NList=None, ):
+    def Flatten(self, E_Dict=None, NList=None, Weights=False):
         if E_Dict is None:
             E_Dict = {}
             for N in self.Data:
@@ -425,6 +425,12 @@ class FCIHelper:
                 D_All += [D]*len(EE)
                 N_All += [N]*len(EE)
                 E_All += list(EE)
+
+        if Weights:
+            E_All = np.array(E_All)
+            E_All[0] = 1. - np.sum(E_All)
+            return E_All
+
 
         return np.array(D_All), np.array(N_All), np.array(E_All)
     
@@ -489,7 +495,7 @@ class FCIHelper:
         for kbT in kbT_all:
             W_T, E_T, D_T = self.Solve(kbT)
             D_All, N_All, E_All = self.Flatten()
-            _, _, W_All = self.Flatten(W_T)
+            W_All = self.Flatten(W_T, Weights=True)
 
             # Incorporate the chemical potential into the energies
             E_All = E_All - self.mu_Last*(N_All-2)
@@ -540,7 +546,8 @@ class KSThermalHelper:
         # First do the interacting system if possible
         if not(FCIHelper is None):
             W_T, E_T, D_T = FCIHelper.Solve(kbT)
-            D_All, N_All, W_All = FCIHelper.Flatten(W_T)
+            D_All, N_All, E_All = FCIHelper.Flatten()
+            W_All = FCIHelper.Flatten(W_T, Weights=True)
             tauS = -kbT*np.dot(W_All, safelog(W_All/D_All))
 
             FE_T = E_T - tauS
